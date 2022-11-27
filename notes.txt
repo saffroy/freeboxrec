@@ -1,0 +1,41 @@
+- front
+  . desk? bof
+  . cli? mmm
+  . web
+  . for task in progress?
+    - not necessarily:
+      . can monitor or cancel through regular UI
+  . tasks:
+    - add recording
+      . pick: date, time, duration, channel, margins (minutes)
+      . job should have metadata describing program
+    - display current+future recordings
+    - display programs
+      . pick date, time window (4h), channel
+    - cancel future recording
+    - cancel recording in progress
+- back
+  . obtain stream data
+    - freebox API v8 gives all TBC
+    - otherwise: fbxserve + date/time/duration picker
+    DONE
+  . filter stream data: available, HD+
+    DONE
+  . optional: obtain epg data
+    - freebox API
+    DONE kinda
+  . schedule recordings
+    DONE
+  . obtain future+recordings
+    - use at? need to parse+filter atq
+      . check fricorder code
+      . maybe use at queues? nah, not relevant
+    - or use local db + at
+    DONE
+  . cancel recordings
+    DONE
+- tests
+  . middle consumes json API
+  . front consumes json API
+  . json schema validator?
+    

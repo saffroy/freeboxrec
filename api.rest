@@ -1,0 +1,24 @@
+# -*- restclient -*-
+
+# for quick manual tests of API endpoints
+
+#
+GET http://localhost:8082/channels
+
+#
+GET http://localhost:8082/recordings
+
+#
+POST http://localhost:8082/program
+
+{
+"num": 2,
+"tstamp": 1988150400,
+"duration": 100,
+"title": "hello, world!"
+}
+
+#
+POST http://localhost:8082/cancel
+
+{"id": 650}

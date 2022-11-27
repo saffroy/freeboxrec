@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <!-- <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script> -->
+    <script src="/static/vue.global.js"></script>
+    <title>freeboxrec</title>
+    <style>
+      td { text-align: center; }
+    </style>
+  </head>
+
+  <body>
+    <div id="app">
+      <!-- table for channels: checkbox, num, name -->
+      <fieldset id="channelSelector" style="overflow-y: scroll; max-height: 200px">
+	<legend>Chaîne à enregistrer:</legend>
+
+	<div v-for="chan in channels">
+	  <input type="radio" :id="'C' + chan.num" :value="chan.num" v-model="prog.chan" />
+	  <label :for="'C' + chan.num">{{ chan.num }} - {{ chan.name }}</label>
+	</div>
+
+      </fieldset>
+
+      <div>
+	<label for="dateSelector">Date de début: </label>
+	<input id="dateSelector" type="date" v-model="prog.date">
+      </div>
+
+      <div>
+	<label for="hourSelector">Heure de début: </label>
+	<select name="hour" id="hourSelector" v-model="prog.hour">
+	  <option v-for="h in range(24)" :value="h">{{h}} </option>
+	</select>
+	<select name="min" id="minSelector" v-model="prog.min">
+	  <option v-for="h in range(12)" :value="h*5">{{h*5}} </option>
+	</select>
+      </div>
+
+      <div>
+	<label for="durationSelector">Durée (minutes) :</label>
+	<input id="durationSelector" type="number" v-model="prog.duration" min="0"/>
+      </div>
+
+      <div>Heure de fin: {{prog_end_time}}</div>
+
+      <div>
+	<label for="titleSelector">Titre:</label>
+	<input id="titleSelector" type="text" v-model="prog.title"/>
+      </div>
+
+      <p/>
+
+      <div>
+	<input id="createRecording" type="button" value="Programmer l'enregistrement"
+	       @click="postRecording()"
+	       style="background: lightgreen"/>
+      </div>
+
+      <hr>
+
+      <fieldset>
+	<legend>Enregistrements programmés</legend>
+
+	<table>
+	  <thead>
+	    <tr>
+	      <th>Chaîne</th>
+	      <th>Date</th>
+	      <th>Heure</th>
+	      <th>Durée</th>
+	      <th>Fin</th>
+	      <th>Titre</th>
+	      <th></th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	    <tr v-for="rec in recordings">
+	      <td>{{rec.channel}}</td>
+	      <td>{{rec.date}}</td>
+	      <td>{{rec.start}}</td>
+	      <td>{{rec.duration_min}}</td>
+	      <td>{{rec.end}}</td>
+	      <td>"{{rec.title}}"</td>
+	      <td>
+		<input type="button" :value="`Annuler #${rec.id}`"
+		       @click="postCancel(rec.id, rec.title)"/>
+	      </td>
+	    </tr>
+	  </tbody>
+	</table>
+      </fieldset>
+
+      <!-- debug -->
+      <!-- <hr> -->
+      <!-- <div>Prog: {{ prog }} </div> -->
+
+    </div>
+
+    <script src="/static/app.js"></script>
+
+  </body>
+
+</html>

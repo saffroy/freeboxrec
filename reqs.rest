@@ -1,0 +1,7 @@
+# -*- restclient -*-
+
+
+# 
+GET http://mafreebox.freebox.fr/api/v8/tv/bouquets/freeboxtv/channels/
+#
+GET http://mafreebox.freebox.fr/api/v8/tv/epg/highlights/uuid-webtv-613/1669320000/
