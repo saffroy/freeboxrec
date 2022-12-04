@@ -6,7 +6,7 @@ createApp({
 	    // params for next programmed recording
 	    prog: {
 		chan: 0,
-		date: (new Date()).toLocaleDateString(),
+		date: (new Date()).toLocaleDateString('en-CA'),
 		hour: 21,
 		min: 0,
 		title: '',
