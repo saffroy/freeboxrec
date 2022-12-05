@@ -1,4 +1,5 @@
 const { createApp } = Vue
+const LOCALE_FR = 'fr-FR'
 
 createApp({
     data() {
@@ -20,6 +21,18 @@ createApp({
 		// {num: 2, name: 'F2'},
 	    ],
 
+	    epg: [
+		// table of objects with fields:
+		// title --> string
+		// date --> int (tstamp)
+		// duration --> int (seconds)
+		// {
+		//     date: 1670184600,
+		//     duration: 6600,
+		//     title: "Jalouse"
+		// },
+	    ],
+
 	    recordings: [
 		// table of objects with fields:
 		// id --> int (unique)
@@ -38,7 +51,7 @@ createApp({
 	prog_end_time() {
 	    dt = this.prog_start_dt()
 	    end = new Date(dt.valueOf() + this.prog.duration * 60 * 1000);
-	    return end.toLocaleTimeString()
+	    return end.toLocaleTimeString(LOCALE_FR)
 	},
     },
 
@@ -47,17 +60,83 @@ createApp({
 	    return Array.from ( {length: n}, (value, key) => key)
 	},
 
-	prog_start_dt() {
-	    dt = new Date(this.prog.date)
-	    dt.setHours(this.prog.hour)
-	    dt.setMinutes(this.prog.min)
+	dt_from_date_hour_min(date, hour, min) {
+	    dt = new Date(date)
+	    dt.setHours(hour)
+	    dt.setMinutes(min)
 	    return dt
+	},
+
+	tstamp_from_dt(dt) {
+	    return dt.valueOf() / 1000 // ms to secs. since Epoch
+	},
+
+	dt_from_tstamp(tstamp) {
+	    return new Date(tstamp * 1000); // seconds to ms since Epoch
+	},
+
+	prog_start_dt() {
+	    return this.dt_from_date_hour_min(this.prog.date,
+					      this.prog.hour,
+					      this.prog.min)
+	},
+
+	prog_start_tstamp() {
+	    return this.tstamp_from_dt(this.prog_start_dt())
 	},
 
 	async fetchChannels() {
 	    const resp = await fetch('/channels');
 	    this.channels = await resp.json()
 	    this.prog.chan = this.channels[0].num
+
+	    this.fetchEpg(this.prog.chan, this.prog_start_tstamp())
+	},
+
+	fixupEpg(epg) {
+	    epg.forEach(e => {
+		e.start = this.dt_from_tstamp(e.date)
+		    .toLocaleTimeString(LOCALE_FR)
+		e.end = this.dt_from_tstamp(e.date + e.duration)
+		    .toLocaleTimeString(LOCALE_FR)
+	    })
+	},
+
+	selectEpg(e) {
+	    if (this.prog.chan === 7) {
+		mins_before = 2
+		mins_after = 8
+	    } else {
+		mins_before = 7
+		mins_after = 13
+	    }
+	    dt = this.dt_from_tstamp(e.date - 60 * mins_before)
+	    this.prog.date = dt.toLocaleDateString('en-CA')
+	    this.prog.hour = dt.getHours()
+	    this.prog.min = dt.getMinutes()
+	    this.prog.duration = Math.ceil(e.duration / 60)
+		+ mins_before + mins_after
+	    this.prog.title = e.title
+	},
+
+	async fetchEpg(chan, tstamp) {
+	    fetch('/epg', {
+		method: 'POST',
+		body: JSON.stringify({
+		    "num": chan,
+		    "tstamp": tstamp,
+		})
+	    }).then((resp) => {
+		if (!resp.ok) {
+		    console.error('Could not fetch EPG')
+		    this.epg = []
+		} else {
+		    resp.json().then(epg => {
+			this.fixupEpg(epg)
+			this.epg = epg
+		    })
+		}
+	    })
 	},
 
 	async fetchRecordings() {
@@ -65,25 +144,22 @@ createApp({
 	    recs = await resp.json()
 
 	    recs.forEach(rec => {
-		dt = new Date(rec.tstamp * 1000); // seconds to ms since Epoch
-		rec.date = dt.toLocaleDateString();
-		rec.start = dt.toLocaleTimeString();
-		end = new Date(dt.valueOf() + rec.duration_min * 60 * 1000);
-		rec.end = end.toLocaleTimeString();
+		dt = this.dt_from_tstamp(rec.tstamp);
+		rec.date = dt.toLocaleDateString(LOCALE_FR);
+		rec.start = dt.toLocaleTimeString(LOCALE_FR);
+		end = this.dt_from_tstamp(rec.tstamp + rec.duration_min * 60);
+		rec.end = end.toLocaleTimeString(LOCALE_FR);
 	    })
 
 	    this.recordings = recs
 	},
 
 	async postRecording() {
-	    dt = this.prog_start_dt()
-	    tstamp = dt.valueOf() / 1000 // ms to secs. since Epoch
-
 	    fetch('/program', {
 		method: 'POST',
 		body: JSON.stringify({
 		    "num": this.prog.chan,
-		    "tstamp": tstamp,
+		    "tstamp": this.prog_start_tstamp(),
 		    "duration": this.prog.duration,
 		    "title": this.prog.title,
 		})
@@ -114,6 +190,25 @@ createApp({
 		    this.fetchRecordings()
 		}
 	    })
+	},
+    },
+
+    watch: {
+	'prog.chan'(newChan) {
+	    this.fetchEpg(newChan, this.prog_start_tstamp())
+	    this.prog.title = ''
+	},
+	'prog.date'(newDate) {
+	    dt = this.dt_from_date_hour_min(newDate,
+					    this.prog.hour,
+					    this.prog.min)
+	    this.fetchEpg(this.prog.chan, this.tstamp_from_dt(dt))
+	},
+	'prog.hour'(newHour) {
+	    dt = this.dt_from_date_hour_min(this.prog.date,
+					    newHour,
+					    this.prog.min)
+	    this.fetchEpg(this.prog.chan, this.tstamp_from_dt(dt))
 	},
     },
 

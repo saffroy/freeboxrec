@@ -9,6 +9,14 @@ GET http://localhost:8082/channels
 GET http://localhost:8082/recordings
 
 #
+POST http://localhost:8082/epg
+
+{
+"num": 2,
+"tstamp": 1670187471
+}
+
+#
 POST http://localhost:8082/program
 
 {

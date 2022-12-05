@@ -40,7 +40,7 @@
 		<option v-for="h in range(24)" :value="h">{{h}} </option>
 	      </select>
 	      <select name="min" id="minSelector" v-model="prog.min">
-		<option v-for="h in range(12)" :value="h*5">{{h*5}} </option>
+		<option v-for="h in range(60)" :value="h">{{h}} </option>
 	      </select>
 	    </div>
 
@@ -62,6 +62,23 @@
 	    <p/>
 
 	  </div> <!-- col -->
+	</div> <!-- row -->
+
+	<div class="row text-center">
+	  <div>
+	    Liste des programmes:
+	  </div>
+	  <table class="table">
+	    <tr v-for="e in epg">
+	      <td>{{ e.start }}</td>
+	      <td>{{ e.end }}</td>
+	      <td>{{ e.title }}</td>
+	      <td>
+		<input type="button" value="Sélectionner"
+		       @click="selectEpg(e)">
+	      </td>
+	    </tr>
+	  </table>
 	</div> <!-- row -->
 
 	<div class="row text-center">

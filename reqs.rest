@@ -1,5 +1,6 @@
 # -*- restclient -*-
 
+# manual tests of freebox server API
 
 # 
 GET http://mafreebox.freebox.fr/api/v8/tv/bouquets/freeboxtv/channels/

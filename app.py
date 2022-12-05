@@ -9,6 +9,7 @@ import freebox
 
 OUT_DIR = '/backup/ext/tmp'
 SCRIPT_PATH = '/home/saffroy/prog/python/freeboxrec/job.sh'
+EPG_KEYS = { 'date', 'duration', 'title' }
 
 app = flask.Flask('freeboxrec')
 
@@ -21,6 +22,32 @@ def channels():
     c = freebox.fetch_channel_table()
     j = [ { 'num': num, 'name': name }
           for (num, name) in c.name_table() ]
+    return flask.json.jsonify(j)
+
+@app.route('/epg', methods=['POST'])
+def epg():
+    c = freebox.fetch_channel_table()
+
+    try:
+        body = flask.request.get_json(force=True)
+
+        num = int(body['num'])
+        tstamp = int(body['tstamp'])
+
+        uuid = c.uuid(num)
+        dt = datetime.datetime.fromtimestamp(tstamp)
+
+    except Exception as e:
+        raise werkzeug.exceptions.BadRequest(
+            'Error: invalid request body: {}'.format(repr(e)))
+
+    epg = freebox.fetch_epg(uuid, int(dt.timestamp()))
+    j = [
+        dict((k,v)
+             for (k,v) in d.items()
+             if k in EPG_KEYS)
+        for d in epg
+    ]
     return flask.json.jsonify(j)
 
 @app.route('/recordings')
