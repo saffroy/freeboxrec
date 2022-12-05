@@ -12,7 +12,7 @@ def fetch(url):
     r = HTTP.request('GET', url)
     assert(r.status == 200)
     data = json.loads(r.data)
-    assert(data['success'])
+    assert data['success'], 'Freebox API error: "{}"'.format(r.data)
     return data['result']
 
 def fetch_channels():
