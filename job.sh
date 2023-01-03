@@ -22,7 +22,7 @@ trap on_exit exit sigint
 START=$(date +%s)
 END=$(expr $START + ${FREEBOXREC_DURATION})
 
-openRTSP -V -c -F "${FREEBOXREC_OUTFILE}-" "${FREEBOXREC_STREAM}" > /dev/null &
+openRTSP -V -c -4 "${FREEBOXREC_STREAM}" > "${FREEBOXREC_OUTFILE}.mp4" &
 CHILD=$!
 
 while true; do
