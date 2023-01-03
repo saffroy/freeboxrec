@@ -86,18 +86,13 @@ def program():
         duration_min = int(body['duration'])
         title = body['title']
 
-        dt = datetime.datetime.fromtimestamp(tstamp)
-
     except Exception as e:
         raise werkzeug.exceptions.BadRequest(
             'Error: invalid request body: {}'.format(repr(e)))
 
-    outfile = '[{channel}]-{date}-{time}-[{duration}]-{title}'.format(
-        channel=channel,
-        date=dt.date().isoformat(),
-        time=str(dt.time()),
-        duration=duration_min,
+    outfile = '{title}-[{duration}]'.format(
         title=title,
+        duration=duration_min,
     )
     desc = json.dumps(dict(
         channel=channel,
