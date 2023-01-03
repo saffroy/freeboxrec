@@ -1,6 +1,7 @@
 import datetime
 import flask
 import json
+import os
 import re
 import unidecode
 import werkzeug.exceptions
@@ -8,8 +9,8 @@ import werkzeug.exceptions
 import at
 import freebox
 
-OUT_DIR = '/backup/ext/tmp'
-SCRIPT_PATH = '/home/saffroy/prog/python/freeboxrec/job.sh'
+OUT_DIR = os.environ.get('FREEBOXREC_OUTDIR', '/tmp')
+SCRIPT_PATH = os.path.join(os.getcwd(), 'job.sh')
 EPG_KEYS = { 'date', 'duration', 'title' }
 
 app = flask.Flask('freeboxrec')
@@ -102,7 +103,7 @@ def program():
     ))
 
     schedule_rec(stream, tstamp, duration_min*60,
-                 OUT_DIR +'/' + friendly_name(outfile),
+                 os.path.join(OUT_DIR, friendly_name(outfile)),
                  desc)
     return 'OK'
 
