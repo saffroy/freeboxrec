@@ -2,6 +2,7 @@ import datetime
 import flask
 import json
 import re
+import unidecode
 import werkzeug.exceptions
 
 import at
@@ -61,7 +62,7 @@ def recordings():
     return flask.json.jsonify(recs)
 
 def friendly_name(s):
-    return re.sub("[ \t'\",;/]", '_', s)
+    return unidecode.unidecode(re.sub("[ \t'\",;/]", '_', s))
 
 def schedule_rec(stream, tstamp, duration_sec, outfile, desc):
     env = dict()
