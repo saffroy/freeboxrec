@@ -20,8 +20,7 @@ def list_jobs():
     for i in ids:
         cmd = ['at', '-c', i]
         r = subprocess.run(cmd, capture_output=True)
-        s = r.stdout.decode()
-        m = re.search('FREEBOXREC_DESC=([0-9a-zA-Z\+/=]+)', s)
+        m = re.search(b'FREEBOXREC_DESC=([0-9a-zA-Z\+/=]+)', r.stdout)
         if m:
             desc = base64.b64decode(m.group(1)).decode()
             descs.append((i, desc))
