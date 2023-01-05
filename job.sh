@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 set -u
 
 # defaults for manual tests
@@ -17,7 +17,7 @@ on_exit() {
     fi
     exit 0
 }
-trap on_exit exit sigint
+trap on_exit exit int
 
 START=$(date +%s)
 END=$(expr $START + ${FREEBOXREC_DURATION})
