@@ -19,6 +19,9 @@ on_exit() {
 }
 trap on_exit exit int
 
+echo "recording ${FREEBOXREC_OUTFILE}.mp4"
+echo
+
 START=$(date +%s)
 END=$(expr $START + ${FREEBOXREC_DURATION})
 
