@@ -8,6 +8,7 @@
     <link href="/static/bootstrap.min.css" rel="stylesheet">
     <script src="/static/vue.global.js"></script>
     <title>freeboxrec</title>
+    <base href="/">
   </head>
 
   <body>
@@ -75,7 +76,7 @@
 	      <td>{{ e.title }}</td>
 	      <td>
 		<input type="button" value="Sélectionner"
-		       @click="selectEpg(e)">
+		       v-on:click="selectEpg(e)">
 	      </td>
 	    </tr>
 	  </table>
@@ -84,7 +85,7 @@
 	<div class="row text-center">
 	  <div>
 	    <input id="createRecording" type="button" value="Programmer l'enregistrement"
-		   @click="postRecording()"
+		   v-on:click="postRecording()"
 		   style="background: lightgreen"/>
 	  </div>
 	</div> <!-- row -->
@@ -121,7 +122,7 @@
 		  <td>"{{rec.title}}"</td>
 		  <td>
 		    <input type="button" :value="`Annuler #${rec.id}`"
-			   @click="postCancel(rec.id, rec.title)"/>
+			   v-on:click="postCancel(rec.id, rec.title)"/>
 		  </td>
 		</tr>
 	      </tbody>

@@ -86,7 +86,7 @@ createApp({
 	},
 
 	async fetchChannels() {
-	    const resp = await fetch('/channels');
+	    const resp = await fetch('channels');
 	    this.channels = await resp.json()
 	    this.prog.chan = this.channels[0].num
 
@@ -120,7 +120,7 @@ createApp({
 	},
 
 	async fetchEpg(chan, tstamp) {
-	    fetch('/epg', {
+	    fetch('epg', {
 		method: 'POST',
 		body: JSON.stringify({
 		    "num": chan,
@@ -140,7 +140,7 @@ createApp({
 	},
 
 	async fetchRecordings() {
-	    const resp = await fetch('/recordings');
+	    const resp = await fetch('recordings');
 	    recs = await resp.json()
 
 	    recs.forEach(rec => {
@@ -155,7 +155,7 @@ createApp({
 	},
 
 	async postRecording() {
-	    fetch('/program', {
+	    fetch('program', {
 		method: 'POST',
 		body: JSON.stringify({
 		    "num": this.prog.chan,
@@ -180,7 +180,7 @@ createApp({
 		return
 	    }
 
-	    fetch('/cancel', {
+	    fetch('cancel', {
 		method: 'POST',
 		body: JSON.stringify({ id: job_id })
 	    }).then((resp) => {
