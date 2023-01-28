@@ -139,6 +139,12 @@ createApp({
 	    })
 	},
 
+	compareNumbers(a, b) {
+	    return (a > b) ? 1
+		: ((a < b) ? -1
+		   : 0)
+	},
+
 	async fetchRecordings() {
 	    const resp = await fetch('recordings');
 	    recs = await resp.json()
@@ -150,6 +156,8 @@ createApp({
 		end = this.dt_from_tstamp(rec.tstamp + rec.duration_min * 60);
 		rec.end = end.toLocaleTimeString(LOCALE_FR);
 	    })
+
+	    recs.sort((a, b) => this.compareNumbers(a.tstamp, b.tstamp))
 
 	    this.recordings = recs
 	},
