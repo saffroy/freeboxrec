@@ -89,8 +89,6 @@ createApp({
 	    const resp = await fetch('channels');
 	    this.channels = await resp.json()
 	    this.prog.chan = this.channels[0].num
-
-	    this.fetchEpg(this.prog.chan, this.prog_start_tstamp())
 	},
 
 	fixupEpg(epg) {
