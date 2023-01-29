@@ -56,7 +56,7 @@ createApp({
     computed: {
 	prog_end_time() {
 	    dt = this.prog_start_dt()
-	    end = new Date(dt.valueOf() + this.prog.duration * 60 * 1000);
+	    end = new Date(dt.valueOf() + this.prog.duration * 60 * 1000)
 	    return this.time_from_dt(end)
 	},
     },
@@ -82,7 +82,7 @@ createApp({
 	},
 
 	dt_from_tstamp(tstamp) {
-	    return new Date(tstamp * 1000); // seconds to ms since Epoch
+	    return new Date(tstamp * 1000) // seconds to ms since Epoch
 	},
 
 	prog_start_dt() {
@@ -96,7 +96,7 @@ createApp({
 	},
 
 	async fetchChannels() {
-	    const resp = await fetch('channels');
+	    const resp = await fetch('channels')
 	    this.channels = await resp.json()
 	    this.prog.chan = this.channels[0].num
 	},
@@ -152,14 +152,14 @@ createApp({
 	},
 
 	async fetchRecordings() {
-	    const resp = await fetch('recordings');
+	    const resp = await fetch('recordings')
 	    recs = await resp.json()
 
 	    recs.forEach(rec => {
-		dt = this.dt_from_tstamp(rec.tstamp);
-		rec.date = dt.toLocaleDateString(LOCALE_FR, DATE_OPTIONS_SHORT);
-		rec.start = this.time_from_dt(dt);
-		end = this.dt_from_tstamp(rec.tstamp + rec.duration_min * 60);
+		dt = this.dt_from_tstamp(rec.tstamp)
+		rec.date = dt.toLocaleDateString(LOCALE_FR, DATE_OPTIONS_SHORT)
+		rec.start = this.time_from_dt(dt)
+		end = this.dt_from_tstamp(rec.tstamp + rec.duration_min * 60)
 		rec.end = this.time_from_dt(end)
 	    })
 
