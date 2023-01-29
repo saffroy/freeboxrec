@@ -70,15 +70,25 @@
 	    Liste des programmes:
 	  </div>
 	  <table class="table">
-	    <tr v-for="e in epg">
-	      <td>{{ e.start }}</td>
-	      <td>{{ e.end }}</td>
-	      <td>{{ e.title }}</td>
-	      <td>
-		<input type="button" value="Sélectionner"
-		       v-on:click="selectEpg(e)">
-	      </td>
-	    </tr>
+	    <thead>
+	      <tr>
+		<th>Début</th>
+		<th>Fin</th>
+		<th>Titre</th>
+		<th></th>
+	      </tr>
+	    </thead>
+	    <tbody>
+	      <tr v-for="e in epg">
+		<td>{{ e.start }}</td>
+		<td>{{ e.end }}</td>
+		<td><em>{{ e.title }}</em></td>
+		<td>
+		  <input type="button" value="Sélectionner"
+			 v-on:click="selectEpg(e)">
+		</td>
+	      </tr>
+	    <tbody>
 	  </table>
 	</div> <!-- row -->
 
@@ -105,7 +115,7 @@
 		<tr>
 		  <th>Chaîne</th>
 		  <th>Date</th>
-		  <th>Heure</th>
+		  <th>Début</th>
 		  <th>Durée</th>
 		  <th>Fin</th>
 		  <th>Titre</th>
@@ -119,7 +129,7 @@
 		  <td>{{rec.start}}</td>
 		  <td>{{rec.duration_min}}</td>
 		  <td>{{rec.end}}</td>
-		  <td>"{{rec.title}}"</td>
+		  <td><em>{{rec.title}}</em></td>
 		  <td>
 		    <input type="button" :value="`Annuler #${rec.id}`"
 			   v-on:click="postCancel(rec.id, rec.title)"/>

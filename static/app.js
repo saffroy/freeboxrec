@@ -1,5 +1,11 @@
 const { createApp } = Vue
 const LOCALE_FR = 'fr-FR'
+const DATE_PICKER_LOCALE = 'en-CA'
+const DATE_OPTIONS_SHORT = {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+}
 
 createApp({
     data() {
@@ -7,7 +13,7 @@ createApp({
 	    // params for next programmed recording
 	    prog: {
 		chan: 0,
-		date: (new Date()).toLocaleDateString('en-CA'),
+		date: (new Date()).toLocaleDateString(DATE_PICKER_LOCALE),
 		hour: 21,
 		min: 0,
 		title: '',
@@ -51,7 +57,7 @@ createApp({
 	prog_end_time() {
 	    dt = this.prog_start_dt()
 	    end = new Date(dt.valueOf() + this.prog.duration * 60 * 1000);
-	    return end.toLocaleTimeString(LOCALE_FR)
+	    return this.time_from_dt(end)
 	},
     },
 
@@ -69,6 +75,10 @@ createApp({
 
 	tstamp_from_dt(dt) {
 	    return dt.valueOf() / 1000 // ms to secs. since Epoch
+	},
+
+	time_from_dt(dt) {
+	    return dt.toLocaleTimeString(LOCALE_FR, { timeStyle: "short" })
 	},
 
 	dt_from_tstamp(tstamp) {
@@ -93,10 +103,8 @@ createApp({
 
 	fixupEpg(epg) {
 	    epg.forEach(e => {
-		e.start = this.dt_from_tstamp(e.date)
-		    .toLocaleTimeString(LOCALE_FR)
-		e.end = this.dt_from_tstamp(e.date + e.duration)
-		    .toLocaleTimeString(LOCALE_FR)
+		e.start = this.time_from_dt(this.dt_from_tstamp(e.date))
+		e.end   = this.time_from_dt(this.dt_from_tstamp(e.date + e.duration))
 	    })
 	},
 
@@ -109,7 +117,7 @@ createApp({
 		mins_after = 13
 	    }
 	    dt = this.dt_from_tstamp(e.date - 60 * mins_before)
-	    this.prog.date = dt.toLocaleDateString('en-CA')
+	    this.prog.date = dt.toLocaleDateString(DATE_PICKER_LOCALE)
 	    this.prog.hour = dt.getHours()
 	    this.prog.min = dt.getMinutes()
 	    this.prog.duration = Math.ceil(e.duration / 60)
@@ -149,10 +157,10 @@ createApp({
 
 	    recs.forEach(rec => {
 		dt = this.dt_from_tstamp(rec.tstamp);
-		rec.date = dt.toLocaleDateString(LOCALE_FR);
-		rec.start = dt.toLocaleTimeString(LOCALE_FR);
+		rec.date = dt.toLocaleDateString(LOCALE_FR, DATE_OPTIONS_SHORT);
+		rec.start = this.time_from_dt(dt);
 		end = this.dt_from_tstamp(rec.tstamp + rec.duration_min * 60);
-		rec.end = end.toLocaleTimeString(LOCALE_FR);
+		rec.end = this.time_from_dt(end)
 	    })
 
 	    recs.sort((a, b) => this.compareNumbers(a.tstamp, b.tstamp))
