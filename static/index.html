@@ -67,37 +67,40 @@
 
 	<div class="row text-center">
 	  <div>
-	    Liste des programmes:
+	    <h3>Liste des programmes:</h3>
 	  </div>
-	  <table class="table">
-	    <thead>
-	      <tr>
-		<th>Début</th>
-		<th>Fin</th>
-		<th>Titre</th>
-		<th></th>
-	      </tr>
-	    </thead>
-	    <tbody>
-	      <tr v-for="e in epg">
-		<td>{{ e.start }}</td>
-		<td>{{ e.end }}</td>
-		<td><em>{{ e.title }}</em></td>
-		<td>
-		  <input type="button" value="Sélectionner"
-			 v-on:click="selectEpg(e)">
-		</td>
-	      </tr>
-	    <tbody>
-	  </table>
+	  <div style="overflow-x: auto">
+	    <table class="table">
+	      <thead>
+		<tr>
+		  <th>Début</th>
+		  <th>Fin</th>
+		  <th>Titre</th>
+		  <th></th>
+		</tr>
+	      </thead>
+	      <tbody>
+		<tr v-for="e in epg">
+		  <td>{{ e.start }}</td>
+		  <td>{{ e.end }}</td>
+		  <td><em>{{ e.title }}</em></td>
+		  <td>
+		    <input type="button" value="Sélectionner"
+			   v-on:click="selectEpg(e)">
+		  </td>
+		</tr>
+	      <tbody>
+	    </table>
+	  </div>
 	</div> <!-- row -->
 
 	<div class="row text-center">
 	  <div>
 	    <input id="createRecording" type="button" value="Programmer l'enregistrement"
 		   v-on:click="postRecording()"
-		   style="background: lightgreen"/>
+		   class="btn btn-success">
 	  </div>
+	  <p/>
 	</div> <!-- row -->
       </div> <!-- container -->
 
@@ -109,7 +112,7 @@
 	<div class="row text-center">
 	  <h3>Enregistrements programmés</h3>
 
-	  <div style="overflow-x: scroll; max-width: 100%">
+	  <div style="overflow-x: auto">
 	    <table class="table">
 	      <thead>
 		<tr>
