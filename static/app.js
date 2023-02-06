@@ -7,7 +7,7 @@ const DATE_OPTIONS_SHORT = {
     month: "short",
 }
 
-createApp({
+let myApp = createApp({
     data() {
 	return {
 	    // params for next programmed recording

@@ -2,7 +2,23 @@
 
 # manual tests of freebox server API
 
-# 
-GET http://mafreebox.freebox.fr/api/v8/tv/bouquets/freeboxtv/channels/
+:my-headers = <<
+Connection: close
 #
-GET http://mafreebox.freebox.fr/api/v8/tv/epg/highlights/uuid-webtv-613/1669320000/
+
+
+# channel uuid -> name, flags (unused)
+GET http://mafreebox.freebox.fr/api/v8/tv/channels/
+:my-headers
+
+# list of: channel uuid, number, flags, stream URLs + quality
+GET http://mafreebox.freebox.fr/api/v8/tv/bouquets/freeboxtv/channels/
+:my-headers
+
+# EPG data
+GET http://mafreebox.freebox.fr/api/v8/tv/epg/highlights/uuid-webtv-204/1675720287/
+:my-headers
+
+#
+GET http://mafreebox.freebox.fr/
+:my-headers
