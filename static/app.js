@@ -167,6 +167,10 @@ const myApp = createApp({
 	},
 
 	async postRecording() {
+	    if (this.prog.title === "") {
+		alert("Le champ Titre ne peut être vide.")
+		return
+	    }
 	    fetch('program', {
 		method: 'POST',
 		body: JSON.stringify({
