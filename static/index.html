@@ -84,7 +84,8 @@
 		  <td><em>{{ e.title }}</em></td>
 		  <td>
 		    <input type="button" value="Sélectionner"
-			   v-on:click="selectEpg(e)">
+			   v-on:click="selectEpg(e)"
+			   v-if="dt_from_tstamp(e.date + e.duration) > (new Date())">
 		  </td>
 		</tr>
 	      <tbody>

@@ -54,10 +54,14 @@ const myApp = createApp({
     },
 
     computed: {
-	prog_end_time() {
+	prog_end_dt() {
 	    const dt = this.prog_start_dt()
 	    const end = new Date(dt.valueOf() + this.prog.duration * 60 * 1000)
-	    return this.time_from_dt(end)
+	    return end
+	},
+
+	prog_end_time() {
+	    return this.time_from_dt(this.prog_end_dt)
 	},
     },
 
@@ -171,6 +175,11 @@ const myApp = createApp({
 		alert("Le champ Titre ne peut être vide.")
 		return
 	    }
+	    if (this.prog_end_dt <= (new Date())) {
+		alert("Le programme est terminé.")
+		return
+	    }
+
 	    fetch('program', {
 		method: 'POST',
 		body: JSON.stringify({
