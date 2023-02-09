@@ -81,6 +81,13 @@ let myApp = createApp({
 	    return dt.toLocaleTimeString(LOCALE_FR, { timeStyle: "short" })
 	},
 
+	time_start_end(tstamp, duration_sec) {
+	    let start_time = this.time_from_dt(this.dt_from_tstamp(tstamp))
+	    let end_time   = this.time_from_dt(this.dt_from_tstamp(tstamp + duration_sec))
+	    let minutes = Math.ceil(duration_sec / 60)
+	    return `${start_time} - ${end_time} (${minutes} min.)`
+	},
+
 	dt_from_tstamp(tstamp) {
 	    return new Date(tstamp * 1000) // seconds to ms since Epoch
 	},
@@ -99,13 +106,6 @@ let myApp = createApp({
 	    const resp = await fetch('channels')
 	    this.channels = await resp.json()
 	    this.prog.chan = this.channels[0].num
-	},
-
-	fixupEpg(epg) {
-	    epg.forEach(e => {
-		e.start = this.time_from_dt(this.dt_from_tstamp(e.date))
-		e.end   = this.time_from_dt(this.dt_from_tstamp(e.date + e.duration))
-	    })
 	},
 
 	selectEpg(e) {
@@ -138,7 +138,6 @@ let myApp = createApp({
 		    this.epg = []
 		} else {
 		    resp.json().then(epg => {
-			this.fixupEpg(epg)
 			this.epg = epg
 		    })
 		}
@@ -187,7 +186,7 @@ let myApp = createApp({
 	},
 
 	async postCancel(job_id, title) {
-	    if (confirm(`Annuler #${job_id} "${title}" ?`)) {
+	    if (confirm(`Annuler "${title}" ?`)) {
 		console.log(`cancelling job #${job_id}`)
 	    } else {
 		console.log(`NOT cancelling job #${job_id}`)
@@ -199,7 +198,7 @@ let myApp = createApp({
 		body: JSON.stringify({ id: job_id })
 	    }).then((resp) => {
 		if (!resp.ok) {
-		    alert(`Impossible d'annuler l'enregistrement #${job_id}`)
+		    alert(`Impossible d'annuler l'enregistrement #${job_id} "${title}"`)
 		} else {
 		    this.fetchRecordings()
 		}

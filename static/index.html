@@ -73,16 +73,14 @@
 	    <table class="table">
 	      <thead>
 		<tr>
-		  <th>Début</th>
-		  <th>Fin</th>
+		  <th>Heure</th>
 		  <th>Titre</th>
 		  <th></th>
 		</tr>
 	      </thead>
 	      <tbody>
 		<tr v-for="e in epg">
-		  <td>{{ e.start }}</td>
-		  <td>{{ e.end }}</td>
+		  <td>{{ time_start_end(e.date, e.duration) }}</td>
 		  <td><em>{{ e.title }}</em></td>
 		  <td>
 		    <input type="button" value="Sélectionner"
@@ -118,9 +116,7 @@
 		<tr>
 		  <th>Chaîne</th>
 		  <th>Date</th>
-		  <th>Début</th>
-		  <th>Durée</th>
-		  <th>Fin</th>
+		  <th>Heure</th>
 		  <th>Titre</th>
 		  <th></th>
 		</tr>
@@ -129,12 +125,10 @@
 		<tr v-for="rec in recordings">
 		  <td>{{rec.channel}}</td>
 		  <td>{{rec.date}}</td>
-		  <td>{{rec.start}}</td>
-		  <td>{{rec.duration_min}}</td>
-		  <td>{{rec.end}}</td>
+		  <td>{{ time_start_end(rec.tstamp, rec.duration_min*60) }}</td>
 		  <td><em>{{rec.title}}</em></td>
 		  <td>
-		    <input type="button" :value="`Annuler #${rec.id}`"
+		    <input type="button" value="Annuler"
 			   v-on:click="postCancel(rec.id, rec.title)"/>
 		  </td>
 		</tr>
