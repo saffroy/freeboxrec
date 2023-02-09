@@ -7,7 +7,7 @@ const DATE_OPTIONS_SHORT = {
     month: "short",
 }
 
-let myApp = createApp({
+const myApp = createApp({
     data() {
 	return {
 	    // params for next programmed recording
@@ -55,8 +55,8 @@ let myApp = createApp({
 
     computed: {
 	prog_end_time() {
-	    dt = this.prog_start_dt()
-	    end = new Date(dt.valueOf() + this.prog.duration * 60 * 1000)
+	    const dt = this.prog_start_dt()
+	    const end = new Date(dt.valueOf() + this.prog.duration * 60 * 1000)
 	    return this.time_from_dt(end)
 	},
     },
@@ -67,7 +67,7 @@ let myApp = createApp({
 	},
 
 	dt_from_date_hour_min(date, hour, min) {
-	    dt = new Date(date)
+	    const dt = new Date(date)
 	    dt.setHours(hour)
 	    dt.setMinutes(min)
 	    return dt
@@ -82,9 +82,9 @@ let myApp = createApp({
 	},
 
 	time_start_end(tstamp, duration_sec) {
-	    let start_time = this.time_from_dt(this.dt_from_tstamp(tstamp))
-	    let end_time   = this.time_from_dt(this.dt_from_tstamp(tstamp + duration_sec))
-	    let minutes = Math.ceil(duration_sec / 60)
+	    const start_time = this.time_from_dt(this.dt_from_tstamp(tstamp))
+	    const end_time   = this.time_from_dt(this.dt_from_tstamp(tstamp + duration_sec))
+	    const minutes = Math.ceil(duration_sec / 60)
 	    return `${start_time} - ${end_time} (${minutes} min.)`
 	},
 
@@ -109,14 +109,13 @@ let myApp = createApp({
 	},
 
 	selectEpg(e) {
+	    let mins_before = 7
+	    let mins_after = 13
 	    if (this.prog.chan === 7) {
 		mins_before = 2
 		mins_after = 8
-	    } else {
-		mins_before = 7
-		mins_after = 13
 	    }
-	    dt = this.dt_from_tstamp(e.date - 60 * mins_before)
+	    const dt = this.dt_from_tstamp(e.date - 60 * mins_before)
 	    this.prog.date = dt.toLocaleDateString(DATE_PICKER_LOCALE)
 	    this.prog.hour = dt.getHours()
 	    this.prog.min = dt.getMinutes()
@@ -152,10 +151,10 @@ let myApp = createApp({
 
 	async fetchRecordings() {
 	    const resp = await fetch('recordings')
-	    recs = await resp.json()
+	    const recs = await resp.json()
 
 	    recs.forEach(rec => {
-		dt = this.dt_from_tstamp(rec.tstamp)
+		const dt = this.dt_from_tstamp(rec.tstamp)
 		rec.date = dt.toLocaleDateString(LOCALE_FR, DATE_OPTIONS_SHORT)
 		rec.start = this.time_from_dt(dt)
 		end = this.dt_from_tstamp(rec.tstamp + rec.duration_min * 60)
@@ -212,15 +211,15 @@ let myApp = createApp({
 	    this.prog.title = ''
 	},
 	'prog.date'(newDate) {
-	    dt = this.dt_from_date_hour_min(newDate,
-					    this.prog.hour,
-					    this.prog.min)
+	    const dt = this.dt_from_date_hour_min(newDate,
+						  this.prog.hour,
+						  this.prog.min)
 	    this.fetchEpg(this.prog.chan, this.tstamp_from_dt(dt))
 	},
 	'prog.hour'(newHour) {
-	    dt = this.dt_from_date_hour_min(this.prog.date,
-					    newHour,
-					    this.prog.min)
+	    const dt = this.dt_from_date_hour_min(this.prog.date,
+						  newHour,
+						  this.prog.min)
 	    this.fetchEpg(this.prog.chan, this.tstamp_from_dt(dt))
 	},
     },
