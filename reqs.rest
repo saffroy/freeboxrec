@@ -6,19 +6,26 @@
 Connection: close
 #
 
+:tstamp := (format-time-string "%s")
+
+:api_version = latest
 
 # channel uuid -> name, flags (unused)
-GET http://mafreebox.freebox.fr/api/v8/tv/channels/
+GET http://mafreebox.freebox.fr/api/:api_version/tv/channels/
 :my-headers
 
 # list of: channel uuid, number, flags, stream URLs + quality
-GET http://mafreebox.freebox.fr/api/v8/tv/bouquets/freeboxtv/channels/
+GET http://mafreebox.freebox.fr/api/:api_version/tv/bouquets/freeboxtv/channels/
 :my-headers
 
 # EPG data
-GET http://mafreebox.freebox.fr/api/v8/tv/epg/highlights/uuid-webtv-204/1675720287/
+GET http://mafreebox.freebox.fr/api/:api_version/tv/epg/highlights/uuid-webtv-204/:tstamp/
 :my-headers
 
 #
 GET http://mafreebox.freebox.fr/
+:my-headers
+
+#
+GET http://mafreebox.freebox.fr/api_version
 :my-headers
