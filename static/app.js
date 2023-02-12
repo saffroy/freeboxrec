@@ -1,6 +1,6 @@
 const { createApp } = Vue
 const LOCALE_FR = 'fr-FR'
-const DATE_PICKER_LOCALE = 'en-CA'
+const DATE_PICKER_LOCALE = 'fr-CA'
 const DATE_OPTIONS_SHORT = {
     weekday: "short",
     day: "numeric",
