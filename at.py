@@ -9,7 +9,7 @@ def list_all_at_jobs():
 
     s = r.stdout.decode()
     m = re.findall('(^|\n)([0-9]+)', s)
-    ids = [ i for (_,i) in m ]
+    ids = [ int(i) for (_,i) in m ]
     return ids
 
 def list_jobs():
@@ -18,8 +18,8 @@ def list_jobs():
 
     descs = []
     for i in ids:
-        cmd = ['at', '-c', i]
-        r = subprocess.run(cmd, capture_output=True)
+        cmd = f'at -c {i}'
+        r = subprocess.run(cmd.split(), capture_output=True)
         m = re.search(b'FREEBOXREC_DESC=([0-9a-zA-Z\+/=]+)', r.stdout)
         if m:
             desc = base64.b64decode(m.group(1)).decode()
@@ -38,14 +38,12 @@ def schedule_job(tstamp, script, extra_env=None, desc=''):
     delta = then - now
     minutes = max(0, int(delta.total_seconds() / 60))
 
-    cmd = 'at -f {script} now + {minutes} minutes'.format(
-        script=script,
-        minutes=minutes)
-
+    cmd = f'at -f {script} now + {minutes} minutes'
     subprocess.run(cmd.split(), env=env)
 
 def cancel_job(i):
-    subprocess.run(['atrm', str(i)], capture_output=True)
+    cmd = f'atrm {i}'
+    subprocess.run(cmd.split())
 
 def smoke_test():
     import tempfile
