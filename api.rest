@@ -2,14 +2,16 @@
 
 # for quick manual tests of API endpoints
 
-#
-GET http://localhost:8082/channels
+:base = localhost:8082
 
 #
-GET http://localhost:8082/recordings
+GET http://:base/channels
 
 #
-POST http://localhost:8082/epg
+GET http://:base/recordings
+
+#
+POST http://:base/epg
 
 {
 "num": 2,
@@ -17,7 +19,7 @@ POST http://localhost:8082/epg
 }
 
 #
-POST http://localhost:8082/program
+POST http://:base/program
 
 {
 "num": 2,
@@ -27,6 +29,6 @@ POST http://localhost:8082/program
 }
 
 #
-POST http://localhost:8082/cancel
+POST http://:base/cancel
 
 {"id": 650}
