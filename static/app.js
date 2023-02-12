@@ -41,14 +41,15 @@ const myApp = createApp({
 
 	    recordings: [
 		// table of objects with fields:
-		// id --> int (unique)
 		// channel --> string
 		// date --> string
-		// start --> string
 		// duration_min --> int
+		// id --> int (unique)
 		// title --> string
-		// {id: 42, channel: 'A', date: '2022-12-24',
-		//  start: '20h45', duration_min: 95, title: 'merry xmas'},
+		// tstamp --> int (tstamp)
+		// { "channel": "Arte", "duration_min": 130, "id": 740,
+		// "title": "Starship Troopers", "tstamp": 1676231580,
+		// "date": "dim. 12 févr." }
 	    ],
 	}
     },
@@ -70,6 +71,12 @@ const myApp = createApp({
 	    return Array.from ( {length: n}, (value, key) => key)
 	},
 
+	compareNumbers(a, b) {
+	    return (a > b) ? 1
+		: ((a < b) ? -1
+		   : 0)
+	},
+
 	dt_from_date_hour_min(date, hour, min) {
 	    const dt = new Date(date)
 	    dt.setHours(hour)
@@ -85,15 +92,15 @@ const myApp = createApp({
 	    return dt.toLocaleTimeString(LOCALE_FR, { timeStyle: "short" })
 	},
 
+	dt_from_tstamp(tstamp) {
+	    return new Date(tstamp * 1000) // seconds to ms since Epoch
+	},
+
 	time_start_end(tstamp, duration_sec) {
 	    const start_time = this.time_from_dt(this.dt_from_tstamp(tstamp))
 	    const end_time   = this.time_from_dt(this.dt_from_tstamp(tstamp + duration_sec))
 	    const minutes = Math.ceil(duration_sec / 60)
 	    return `${start_time} - ${end_time} (${minutes} min.)`
-	},
-
-	dt_from_tstamp(tstamp) {
-	    return new Date(tstamp * 1000) // seconds to ms since Epoch
 	},
 
 	prog_start_dt() {
@@ -113,18 +120,16 @@ const myApp = createApp({
 	},
 
 	selectEpg(e) {
-	    let mins_before = 7
-	    let mins_after = 13
-	    if (this.prog.chan === 7) {
-		mins_before = 2
-		mins_after = 8
-	    }
+	    const chan_on_time = (this.prog.chan === 7)
+	    const mins_before = chan_on_time ? 2 : 7
+	    const mins_after = chan_on_time ? 8 : 13
 	    const dt = this.dt_from_tstamp(e.date - 60 * mins_before)
+
 	    this.prog.date = dt.toLocaleDateString(DATE_PICKER_LOCALE)
 	    this.prog.hour = dt.getHours()
 	    this.prog.min = dt.getMinutes()
-	    this.prog.duration = Math.ceil(e.duration / 60)
-		+ mins_before + mins_after
+	    this.prog.duration =
+		Math.ceil(e.duration / 60) + mins_before + mins_after
 	    this.prog.title = e.title
 	},
 
@@ -147,12 +152,6 @@ const myApp = createApp({
 	    })
 	},
 
-	compareNumbers(a, b) {
-	    return (a > b) ? 1
-		: ((a < b) ? -1
-		   : 0)
-	},
-
 	async fetchRecordings() {
 	    const resp = await fetch('recordings')
 	    const recs = await resp.json()
@@ -160,9 +159,6 @@ const myApp = createApp({
 	    recs.forEach(rec => {
 		const dt = this.dt_from_tstamp(rec.tstamp)
 		rec.date = dt.toLocaleDateString(LOCALE_FR, DATE_OPTIONS_SHORT)
-		rec.start = this.time_from_dt(dt)
-		end = this.dt_from_tstamp(rec.tstamp + rec.duration_min * 60)
-		rec.end = this.time_from_dt(end)
 	    })
 
 	    recs.sort((a, b) => this.compareNumbers(a.tstamp, b.tstamp))
@@ -189,39 +185,31 @@ const myApp = createApp({
 		    "title": this.prog.title,
 		})
 	    }).then((resp) => {
-		if (!resp.ok) {
+		if (!resp.ok)
 		    alert(`Impossible de programmer l'enregistrement`)
-		} else {
-		    this.fetchRecordings()
-		}
+		this.fetchRecordings()
 	    })
 	},
 
 	async postCancel(job_id, title) {
-	    if (confirm(`Annuler "${title}" ?`)) {
-		console.log(`cancelling job #${job_id}`)
-	    } else {
-		console.log(`NOT cancelling job #${job_id}`)
+	    if (!confirm(`Annuler "${title}" ?`))
 		return
-	    }
 
 	    fetch('cancel', {
 		method: 'POST',
 		body: JSON.stringify({ id: job_id })
 	    }).then((resp) => {
-		if (!resp.ok) {
+		if (!resp.ok)
 		    alert(`Impossible d'annuler l'enregistrement #${job_id} "${title}"`)
-		} else {
-		    this.fetchRecordings()
-		}
+		this.fetchRecordings()
 	    })
 	},
     },
 
     watch: {
 	'prog.chan'(newChan) {
-	    this.fetchEpg(newChan, this.prog_start_tstamp())
 	    this.prog.title = ''
+	    this.fetchEpg(newChan, this.prog_start_tstamp())
 	},
 	'prog.date'(newDate) {
 	    const dt = this.dt_from_date_hour_min(newDate,
