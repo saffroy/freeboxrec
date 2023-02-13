@@ -1,10 +1,10 @@
 import urllib3
 import json
 
-API_BASE = 'http://mafreebox.freebox.fr'
-CHANNEL_PROP_URL  = API_BASE + '/api/v8/tv/channels'
-CHANNEL_TABLE_URL = API_BASE + '/api/v8/tv/bouquets/freeboxtv/channels/'
-CHANNEL_EPG_URL   = API_BASE + '/api/v8/tv/epg/by_channel/{uuid}/{tstamp}'
+API_BASE = 'http://mafreebox.freebox.fr/api/v8'
+CHANNEL_PROP_URL  = API_BASE + '/tv/channels'
+CHANNEL_TABLE_URL = API_BASE + '/tv/bouquets/freeboxtv/channels/'
+CHANNEL_EPG_URL   = API_BASE + '/tv/epg/by_channel/{uuid}/{tstamp}'
 
 HTTP = urllib3.PoolManager()
 
