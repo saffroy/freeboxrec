@@ -4,7 +4,7 @@ import json
 API_BASE = 'http://mafreebox.freebox.fr'
 CHANNEL_PROP_URL  = API_BASE + '/api/v8/tv/channels'
 CHANNEL_TABLE_URL = API_BASE + '/api/v8/tv/bouquets/freeboxtv/channels/'
-CHANNEL_EPG_URL   = API_BASE + '/api/v8/tv/epg/highlights/{uuid}/{tstamp}'
+CHANNEL_EPG_URL   = API_BASE + '/api/v8/tv/epg/by_channel/{uuid}/{tstamp}'
 
 HTTP = urllib3.PoolManager()
 
@@ -60,7 +60,8 @@ class Channels():
 
 def fetch_epg(uuid, tstamp):
     url = CHANNEL_EPG_URL.format(uuid=uuid, tstamp=tstamp)
-    return fetch(url)
+    res = fetch(url)
+    return list(res.values())
 
 def fetch_channel_table():
     channels = fetch_channels()
