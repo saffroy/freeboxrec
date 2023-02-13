@@ -17,6 +17,7 @@ const myApp = createApp({
 	    // params for next programmed recording
 	    prog: {
 		chan: 0,
+		chan_idx: -1,
 		date: date_today(),
 		hour: 21,
 		min: 0,
@@ -81,6 +82,12 @@ const myApp = createApp({
 		   : 0)
 	},
 
+	chan_update(adj) {
+	    const new_idx = this.prog.chan_idx + adj
+	    if ((new_idx >= 0) && (new_idx < this.channels.length))
+		this.prog.chan_idx = new_idx
+	},
+
 	dt_from_date_hour_min(date, hour, min) {
 	    const dt = new Date(date)
 	    dt.setHours(hour)
@@ -143,7 +150,7 @@ const myApp = createApp({
 	async fetchChannels() {
 	    const resp = await fetch('channels')
 	    this.channels = await resp.json()
-	    this.prog.chan = this.channels[0].num
+	    this.prog.chan_idx = 0
 	},
 
 	selectEpg(e) {
@@ -247,6 +254,9 @@ const myApp = createApp({
 						  newHour,
 						  this.prog.min)
 	    this.fetchEpg(this.prog.chan, this.tstamp_from_dt(dt))
+	},
+	'prog.chan_idx'(newIdx) {
+	    this.prog.chan = this.channels[newIdx].num
 	},
     },
 

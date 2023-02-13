@@ -19,12 +19,19 @@
 	  <div class="col">
 	    <h3>Chaîne à enregistrer:</h3>
 
+	    <div class="btn-group btn-group-sm d-sm-flex border border-1 container" role="group">
+	      <input type="button" value="^^" v-on:click="chan_update(-1)"
+		     class="btn btn-secondary border flex-fill" >
+	      <input type="button" value="vv" v-on:click="chan_update(+1)"
+		     class="btn btn-secondary border flex-fill" >
+	    </div>
+
 	    <div style="overflow-y: scroll; max-height: 200px" class="border border-1">
-	      <div v-for="chan in channels" class="form-check">
-		<input type="radio" :id="'C' + chan.num" :value="chan.num" v-model="prog.chan"
+	      <div v-for="idx in range(channels.length)" class="form-check">
+		<input type="radio" :value="idx" v-model="prog.chan_idx"
 		       class="form-check-input"/>
-		<label :for="'C' + chan.num" class="form-check-label">
-		  {{ chan.num }} - {{ chan.name }}</label>
+		<label class="form-check-label">
+		  {{ channels[idx].num }} - {{ channels[idx].name }}</label>
 	      </div>
 	    </div>
 	  </div> <!-- col -->
