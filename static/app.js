@@ -69,6 +69,13 @@ const myApp = createApp({
 	prog_end_time() {
 	    return this.time_from_dt(this.prog_end_dt)
 	},
+
+	channel_name() {
+	    if (this.prog.chan_idx < 0)
+		return "<...>"
+	    else
+		return this.channels[this.prog.chan_idx].name
+	},
     },
 
     methods: {

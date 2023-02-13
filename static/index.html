@@ -17,7 +17,10 @@
       <div class="container border border-5">
 	<div class="row">
 	  <div class="col">
-	    <h3>Chaîne à enregistrer:</h3>
+	    <div class="row flex-fill">
+	      <h4> Chaîne à enregistrer:</h4>
+	      <span class="btn btn-outline-dark rounded-pill"> {{channel_name}} </span>
+	    </div> <!-- row -->
 
 	    <div class="btn-group btn-group-sm d-sm-flex border border-1 container" role="group">
 	      <input type="button" value="^^" v-on:click="chan_update(-1)"
