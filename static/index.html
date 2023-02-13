@@ -45,6 +45,23 @@
 	      </select>
 	    </div>
 
+	    <div class="btn-group btn-group-sm d-sm-flex border border-1" role="group">
+	      <input type="button" value="<< 24h" v-on:click="date_add(-1)"
+		     class="btn btn-secondary border flex-fill" >
+	      <input type="button" value="<< 3h" v-on:click="time_add(-3)"
+		     class="btn btn-secondary border flex-fill" >
+	      <input type="button" value="Now"
+		     v-on:click="update_day_time(new Date())"
+		     class="btn btn-secondary border flex-fill" >
+	      <input type="button" value="Ce soir"
+		     v-on:click="reset_day_time()"
+		     class="btn btn-secondary border flex-fill" >
+	      <input type="button" value="3h >>" v-on:click="time_add(+3)"
+		     class="btn btn-secondary border flex-fill" >
+	      <input type="button" value="24h >>" v-on:click="date_add(+1)"
+		     class="btn btn-secondary border flex-fill" >
+	    </div>
+
 	    <div>
 	      <label for="durationSelector">Durée (minutes) :</label>
 	      <input id="durationSelector" type="number" v-model="prog.duration" min="0"/>
@@ -85,7 +102,8 @@
 		  <td>
 		    <input type="button" value="Sélectionner"
 			   v-on:click="selectEpg(e)"
-			   v-if="dt_from_tstamp(e.date + e.duration) > (new Date())">
+			   v-if="dt_from_tstamp(e.date + e.duration) > (new Date())"
+			   class="btn btn-secondary btn-sm">
 		  </td>
 		</tr>
 	      <tbody>
@@ -130,7 +148,8 @@
 		  <td><em>{{rec.title}}</em></td>
 		  <td>
 		    <input type="button" value="Annuler"
-			   v-on:click="postCancel(rec.id, rec.title)"/>
+			   v-on:click="postCancel(rec.id, rec.title)"
+			   class="btn btn-danger btn-sm">
 		  </td>
 		</tr>
 	      </tbody>

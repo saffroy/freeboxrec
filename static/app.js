@@ -7,13 +7,17 @@ const DATE_OPTIONS_SHORT = {
     month: "short",
 }
 
+function date_today() {
+    return (new Date()).toLocaleDateString(DATE_PICKER_LOCALE)
+}
+
 const myApp = createApp({
     data() {
 	return {
 	    // params for next programmed recording
 	    prog: {
 		chan: 0,
-		date: (new Date()).toLocaleDateString(DATE_PICKER_LOCALE),
+		date: date_today(),
 		hour: 21,
 		min: 0,
 		title: '',
@@ -113,6 +117,29 @@ const myApp = createApp({
 	    return this.tstamp_from_dt(this.prog_start_dt())
 	},
 
+	update_day_time(dt) {
+	    this.prog.date = dt.toLocaleDateString(DATE_PICKER_LOCALE)
+	    this.prog.hour = dt.getHours()
+	    this.prog.min = dt.getMinutes()
+	},
+
+	date_add(days) {
+	    const one_day_ms = 24*60*60*1000
+	    const dt = new Date(this.prog_start_dt().valueOf() + days * one_day_ms)
+	    this.update_day_time(dt)
+	},
+
+	time_add(hours) {
+	    const one_hour_ms = 60*60*1000
+	    const dt = new Date(this.prog_start_dt().valueOf() + hours * one_hour_ms)
+	    this.update_day_time(dt)
+	},
+
+	reset_day_time() {
+	    const dt = this.dt_from_date_hour_min(date_today(), 21, 0)
+	    this.update_day_time(dt)
+	},
+
 	async fetchChannels() {
 	    const resp = await fetch('channels')
 	    this.channels = await resp.json()
@@ -125,9 +152,7 @@ const myApp = createApp({
 	    const mins_after = chan_on_time ? 8 : 13
 	    const dt = this.dt_from_tstamp(e.date - 60 * mins_before)
 
-	    this.prog.date = dt.toLocaleDateString(DATE_PICKER_LOCALE)
-	    this.prog.hour = dt.getHours()
-	    this.prog.min = dt.getMinutes()
+	    this.update_day_time(dt)
 	    this.prog.duration =
 		Math.ceil(e.duration / 60) + mins_before + mins_after
 	    this.prog.title = e.title
