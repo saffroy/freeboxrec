@@ -178,6 +178,7 @@ const myApp = createApp({
 		    this.epg = []
 		} else {
 		    resp.json().then(epg => {
+			epg.sort((a, b) => this.compareNumbers(a.date, b.date))
 			this.epg = epg
 		    })
 		}
