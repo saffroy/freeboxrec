@@ -19,24 +19,32 @@
 	  <div class="col">
 	    <div class="row flex-fill">
 	      <h4> Chaîne à enregistrer:</h4>
-	      <span class="btn btn-outline-dark rounded-pill"> {{channel_name}} </span>
+	      <span class="btn btn-outline-dark"> {{channel_name}} </span>
 	    </div> <!-- row -->
 
-	    <div class="btn-group btn-group-sm d-sm-flex border border-1 container" role="group">
-	      <input type="button" value="^^" v-on:click="chan_update(-1)"
-		     class="btn btn-secondary border flex-fill" >
-	      <input type="button" value="vv" v-on:click="chan_update(+1)"
-		     class="btn btn-secondary border flex-fill" >
-	    </div>
+	    <div class="d-flex flex-row">
 
-	    <div style="overflow-y: scroll; max-height: 200px" class="border border-1">
-	      <div v-for="idx in range(channels.length)" class="form-check">
-		<input type="radio" :value="idx" v-model="prog.chan_idx"
-		       class="form-check-input"/>
-		<label class="form-check-label">
-		  {{ channels[idx].num }} - {{ channels[idx].name }}</label>
-	      </div>
-	    </div>
+	      <div class="col-11 flex-shrink-10">
+		<div style="overflow-y: scroll; max-height: 200px">
+		  <div v-for="idx in range(channels.length)" class="form-check">
+		    <input type="radio" :value="idx" v-model="prog.chan_idx"
+			   class="form-check-input"/>
+		    <label class="form-check-label">
+		      {{ channels[idx].num }} - {{ channels[idx].name }}</label>
+		  </div>
+		</div>
+	      </div> <!-- col -->
+
+	      <div class="col-1 d-flex flex-column-1 flex-shrink-1">
+		<div class="btn-group-vertical flex-fill" role="group">
+		  <input type="button" value="/\" v-on:click="chan_update(-1)"
+			 class="btn btn-secondary border border-1" >
+		  <input type="button" value="\/" v-on:click="chan_update(+1)"
+			 class="btn btn-secondary border border-1" >
+		</div>
+	      </div> <!-- col -->
+
+	    </div> <!-- row -->
 	  </div> <!-- col -->
 
 	  <div class="col">
