@@ -154,10 +154,26 @@ const myApp = createApp({
 	    this.update_day_time(dt)
 	},
 
+        fetch(resource, options) {
+            return fetch(resource, options)
+                .then((resp) => {
+                    if (!resp.ok) {
+                        console.error(`HTTP error fetching ${resource}`, resp)
+                        throw new Error(`HTTP error status: ${resp.status}`)
+                    }
+                    return resp
+                })
+        },
+
 	async fetchChannels() {
-	    const resp = await fetch('channels')
-	    this.channels = await resp.json()
-	    this.prog.chan_idx = 0
+            try {
+	        const resp = await this.fetch('channels')
+	        this.channels = await resp.json()
+	        this.prog.chan_idx = 0
+            } catch(error) {
+                console.error(`Error fetching /channels: ${error}`)
+                alert('Impossible de charger la liste des chaînes.')
+            }
 	},
 
 	selectEpg(e) {
@@ -173,37 +189,42 @@ const myApp = createApp({
 	},
 
 	async fetchEpg(chan, tstamp) {
-	    fetch('epg', {
-		method: 'POST',
-		body: JSON.stringify({
-		    "num": chan,
-		    "tstamp": tstamp,
-		})
-	    }).then((resp) => {
-		if (!resp.ok) {
-		    console.error('Could not fetch EPG')
-		    this.epg = []
-		} else {
-		    resp.json().then(epg => {
-			epg.sort((a, b) => this.compareNumbers(a.date, b.date))
-			this.epg = epg
+            try {
+	        const resp = await this.fetch('epg', {
+		    method: 'POST',
+		    body: JSON.stringify({
+		        "num": chan,
+		        "tstamp": tstamp,
 		    })
-		}
-	    })
+	        })
+                epg = await resp.json()
+
+                epg.sort((a, b) => this.compareNumbers(a.date, b.date))
+		this.epg = epg
+            } catch (error) {
+                console.error(`Error fetching /epg: ${error}`)
+                alert('Impossible de charger la liste des programmes.')
+		this.epg = []
+	    }
 	},
 
 	async fetchRecordings() {
-	    const resp = await fetch('recordings')
-	    const recs = await resp.json()
+            try {
+	        const resp = await this.fetch('recordings')
+	        const recs = await resp.json()
 
-	    recs.forEach(rec => {
-		const dt = this.dt_from_tstamp(rec.tstamp)
-		rec.date = dt.toLocaleDateString(LOCALE_FR, DATE_OPTIONS_SHORT)
-	    })
+	        recs.forEach(rec => {
+		    const dt = this.dt_from_tstamp(rec.tstamp)
+		    rec.date = dt.toLocaleDateString(LOCALE_FR, DATE_OPTIONS_SHORT)
+	        })
 
-	    recs.sort((a, b) => this.compareNumbers(a.tstamp, b.tstamp))
+	        recs.sort((a, b) => this.compareNumbers(a.tstamp, b.tstamp))
 
-	    this.recordings = recs
+	        this.recordings = recs
+            } catch (error) {
+                console.error(`Error fetching /recordings: ${error}`)
+                alert('Impossible de charger la liste des enregistrements.')
+            }
 	},
 
 	async postRecording() {
@@ -216,33 +237,39 @@ const myApp = createApp({
 		return
 	    }
 
-	    fetch('program', {
-		method: 'POST',
-		body: JSON.stringify({
-		    "num": this.prog.chan,
-		    "tstamp": this.prog_start_tstamp(),
-		    "duration": this.prog.duration,
-		    "title": this.prog.title,
-		})
-	    }).then((resp) => {
-		if (!resp.ok)
-		    alert(`Impossible de programmer l'enregistrement`)
+            try {
+	        await this.fetch('program', {
+		    method: 'POST',
+		    body: JSON.stringify({
+		        "num": this.prog.chan,
+		        "tstamp": this.prog_start_tstamp(),
+		        "duration": this.prog.duration,
+		        "title": this.prog.title,
+		    })
+	        })
+            } catch (error) {
+                console.error(`Error fetching /program: ${error}`)
+	        alert(`Impossible de programmer l'enregistrement.`)
+            } finally {
 		this.fetchRecordings()
-	    })
+	    }
 	},
 
 	async postCancel(job_id, title) {
 	    if (!confirm(`Annuler "${title}" ?`))
 		return
 
-	    fetch('cancel', {
-		method: 'POST',
-		body: JSON.stringify({ id: job_id })
-	    }).then((resp) => {
-		if (!resp.ok)
-		    alert(`Impossible d'annuler l'enregistrement #${job_id} "${title}"`)
+            try {
+	        await this.fetch('cancel', {
+		    method: 'POST',
+		    body: JSON.stringify({ id: job_id })
+	        })
+            } catch (error) {
+                console.error(`Error fetching /cancel: ${error}`)
+		alert(`Impossible d'annuler l'enregistrement #${job_id} "${title}"`)
+            } finally {
 		this.fetchRecordings()
-	    })
+	    }
 	},
     },
 
