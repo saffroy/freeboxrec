@@ -19,7 +19,9 @@
 	  <div class="col">
 	    <div class="row flex-fill">
 	      <h4> Chaîne à enregistrer:</h4>
-	      <span class="btn btn-outline-dark"> {{channel_name}} </span>
+	      <div class="d-flex justify-content-center border border-1">
+                {{channel_name}}
+              </div>
 	    </div> <!-- row -->
 
 	    <div class="d-flex flex-row">
@@ -48,9 +50,10 @@
 	  </div> <!-- col -->
 
 	  <div class="col">
-	    <div>
-	      <label for="dateSelector">Date de début: </label>
-	      <input id="dateSelector" type="date" v-model="prog.date">
+	    <div class="row border border-1">
+	      <label for="dateSelector" class="col-4">Date: </label>
+	      <input id="dateSelector" type="date" v-model="prog.date"
+                     class="col form-control">
 	    </div>
 
 	    <div>
@@ -80,12 +83,17 @@
 		     class="btn btn-secondary border flex-fill" >
 	    </div>
 
-	    <div>
-	      <label for="durationSelector">Durée (minutes) :</label>
-	      <input id="durationSelector" type="number" v-model="prog.duration" min="0"/>
-	    </div>
+            <div class="row">
+	      <div class="col input-group">
+	        <label for="durationSelector" class="col">Durée (min.) :</label>
+	        <input id="durationSelector" type="number" v-model="prog.duration" min="0"
+                       class="col form-control"/>
+	      </div>
 
-	    <div>Heure de fin: {{prog_end_time}}</div>
+	      <div class="col">
+                Fin: <span class="border border-1">{{prog_end_time}}</span>
+              </div>
+            </div> <!-- row -->
 
 	    <div class="input-group mb-3">
 	      <div class="form-floating">
@@ -105,7 +113,7 @@
 	    <h3>Liste des programmes:</h3>
 	  </div>
 	  <div style="overflow-x: auto; overflow-y: scroll; max-height: 200px">
-	    <table class="table">
+	    <table class="table border border-1">
 	      <thead>
 		<tr>
 		  <th>Heure</th>
