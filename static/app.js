@@ -71,10 +71,12 @@ const myApp = createApp({
 	},
 
 	channel_name() {
-	    if (this.prog.chan_idx < 0)
+	    if (this.prog.chan_idx < 0) {
 		return "<...>"
-	    else
-		return this.channels[this.prog.chan_idx].name
+	    } else {
+                const chan = this.channels[this.prog.chan_idx]
+		return `${chan.num} - ${chan.name}`
+            }
 	},
     },
 
