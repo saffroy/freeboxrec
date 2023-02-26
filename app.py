@@ -13,6 +13,8 @@ OUT_DIR = os.environ.get('FREEBOXREC_OUTDIR', '/tmp')
 SCRIPT_PATH = os.path.join(os.getcwd(), 'job.sh')
 EPG_KEYS = { 'date', 'duration', 'title' }
 
+CHANNEL_TABLE = freebox.fetch_channel_table()
+
 app = flask.Flask('freeboxrec')
 
 @app.route('/')
@@ -21,22 +23,19 @@ def root():
 
 @app.route('/channels')
 def channels():
-    c = freebox.fetch_channel_table()
     j = [ { 'num': num, 'name': name }
-          for (num, name) in c.name_table() ]
+          for (num, name) in CHANNEL_TABLE.name_table() ]
     return flask.json.jsonify(j)
 
 @app.route('/epg', methods=['POST'])
 def epg():
-    c = freebox.fetch_channel_table()
-
     try:
         body = flask.request.get_json(force=True)
 
         num = int(body['num'])
         tstamp = int(body['tstamp'])
 
-        uuid = c.uuid(num)
+        uuid = CHANNEL_TABLE.uuid(num)
         dt = datetime.datetime.fromtimestamp(tstamp)
 
     except Exception as e:
@@ -74,14 +73,12 @@ def schedule_rec(stream, tstamp, duration_sec, outfile, desc):
 
 @app.route('/program', methods=['POST'])
 def program():
-    c = freebox.fetch_channel_table()
-
     try:
         body = flask.request.get_json(force=True)
 
         num = int(body['num'])
-        stream = c.stream(num)
-        channel = c.name(num)
+        stream = CHANNEL_TABLE.stream(num)
+        channel = CHANNEL_TABLE.name(num)
 
         tstamp = int(body['tstamp'])
         duration_min = int(body['duration'])
