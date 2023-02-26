@@ -9,13 +9,13 @@ Freebox.
 ## Installation
 
 L'application est en Python, elle utilise les commandes du démon `atd`
-pour programmer des tâches à venir, et `openRTSP` (dans le paquet
-`livemedia-utils` sur Debian) pour enregistrer les flux.
+pour programmer des tâches à venir, et `ffmpeg` pour enregistrer les
+flux.
 
 * Installer les paquets requis :
 
 ```
-sudo apt-get install git python3-pip at livemedia-utils
+sudo apt-get install git python3-pip python3-virtualenv at ffmpeg
 ```
 
 * Récupérer le code :
