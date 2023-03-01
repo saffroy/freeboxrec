@@ -14,3 +14,16 @@ ffmpeg \
     -map 0 -c copy \
     -t ${FREEBOXREC_DURATION} \
     -f mpegts "${FREEBOXREC_OUTFILE}.mpg"
+
+# extract subtitles and delay
+
+ffmpeg \
+    -loglevel level+fatal \
+    -txt_format text -txt_page 889 -fix_sub_duration \
+    -i "${FREEBOXREC_OUTFILE}.mpg" \
+    "${FREEBOXREC_OUTFILE}.srt"
+
+ffprobe \
+    -loglevel level+fatal \
+    -show_entries 'format=start_time' "${FREEBOXREC_OUTFILE}.mpg" \
+    | awk -F= '/start_time=/{print $2}' > "${FREEBOXREC_OUTFILE}.delay"
