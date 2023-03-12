@@ -1,3 +1,5 @@
+"use strict";
+
 const { createApp } = Vue
 const LOCALE_FR = 'fr-FR'
 const DATE_PICKER_LOCALE = 'fr-CA'
@@ -199,7 +201,7 @@ const myApp = createApp({
 		        "tstamp": tstamp,
 		    })
 	        })
-                epg = await resp.json()
+                const epg = await resp.json()
 
                 epg.sort((a, b) => this.compareNumbers(a.date, b.date))
 		this.epg = epg
