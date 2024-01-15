@@ -164,6 +164,7 @@
 		  <th>Heure</th>
 		  <th>Titre</th>
 		  <th></th>
+		  <th></th>
 		</tr>
 	      </thead>
 	      <tbody>
@@ -172,6 +173,7 @@
 		  <td>{{rec.date}}</td>
 		  <td>{{ time_start_end(rec.tstamp, rec.duration_min*60) }}</td>
 		  <td><em>{{rec.title}}</em></td>
+                  <td><em>{{ (rec.running ? "&#x025CB;" : "") }}</em></td>
 		  <td>
 		    <input type="button" value="Annuler"
 			   v-on:click="postCancel(rec.id, rec.title)"

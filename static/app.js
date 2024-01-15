@@ -54,9 +54,10 @@ const myApp = createApp({
 		// id --> int (unique)
 		// title --> string
 		// tstamp --> int (tstamp)
+                // running --> bool
 		// { "channel": "Arte", "duration_min": 130, "id": 740,
 		// "title": "Starship Troopers", "tstamp": 1676231580,
-		// "date": "dim. 12 févr." }
+		// "date": "dim. 12 févr.", running: false }
 	    ],
 	}
     },

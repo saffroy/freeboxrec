@@ -55,9 +55,10 @@ def epg():
 def recordings():
     jobs = at.list_jobs()
     recs = []
-    for (i, d) in jobs:
+    for (i, d, running) in jobs:
         desc = json.loads(d)
         desc['id'] = i
+        desc['running'] = running
         recs.append(desc)
     return flask.json.jsonify(recs)
 
