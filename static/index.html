@@ -11,7 +11,7 @@
     <base href="/">
   </head>
 
-  <body>
+  <body class="text-bg-secondary" style="--bs-bg-opacity: .5;">
 
     <div id="app">
       <div class="container border border-5">
@@ -19,14 +19,14 @@
 	  <div class="col">
 	    <div class="row flex-fill">
 	      <h4> Chaîne à enregistrer:</h4>
-	      <div class="d-flex justify-content-center border border-1">
+	      <div class="d-flex justify-content-center border border-1 text-bg-light">
                 {{channel_name}}
               </div>
 	    </div> <!-- row -->
 
 	    <div class="d-flex flex-row">
 
-	      <div class="col-11 flex-shrink-10">
+	      <div class="col-11 flex-shrink-10 text-bg-light">
 		<div style="overflow-y: scroll; max-height: 200px">
 		  <div v-for="idx in range(channels.length)" class="form-check">
 		    <input type="radio" :value="idx" v-model="prog.chan_idx"
@@ -113,7 +113,7 @@
 	    <h3>Liste des programmes:</h3>
 	  </div>
 	  <div style="overflow-x: auto; overflow-y: scroll; max-height: 200px">
-	    <table class="table border border-1">
+	    <table class="table border border-1 text-bg-light">
 	      <thead>
 		<tr>
 		  <th>Heure</th>
@@ -156,7 +156,7 @@
 	  <h3>Enregistrements programmés</h3>
 
 	  <div style="overflow-x: auto">
-	    <table class="table">
+	    <table class="table text-bg-light">
 	      <thead>
 		<tr>
 		  <th>Chaîne</th>
