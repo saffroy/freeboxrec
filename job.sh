@@ -2,7 +2,7 @@
 set -u
 
 # defaults for manual tests
-FREEBOXREC_STREAM="${FREEBOXREC_STREAM:-rtsp://mafreebox.freebox.fr/fbxtv_pub/stream?namespace=1&service=283&flavour=hd}"
+FREEBOXREC_STREAM="${FREEBOXREC_STREAM:-http://212.27.38.253:52424/freeboxtv/mafreebox.freebox.fr/fbxtv_pub/stream?namespace=1&service=204&flavour=hd}"
 FREEBOXREC_DURATION=${FREEBOXREC_DURATION:-10}
 FREEBOXREC_OUTFILE="${FREEBOXREC_OUTFILE:-/tmp/foo}"
 
