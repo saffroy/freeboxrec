@@ -1,19 +1,32 @@
-import urllib3
 import json
+import time
+import urllib3
 
 API_BASE = 'http://mafreebox.freebox.fr/api/v8'
 CHANNEL_PROP_URL  = API_BASE + '/tv/channels'
 CHANNEL_TABLE_URL = API_BASE + '/tv/bouquets/freeboxtv/channels/'
 CHANNEL_EPG_URL   = API_BASE + '/tv/epg/by_channel/{uuid}/{tstamp}'
 
+RETRIES = 3
+
 HTTP = urllib3.PoolManager()
 
-def fetch(url):
+def _fetch(url):
     r = HTTP.request('GET', url)
     assert(r.status == 200)
     data = json.loads(r.data)
     assert data['success'], 'Freebox API error: "{}"'.format(r.data)
     return data['result']
+
+def fetch(url):
+    # overcome most transient errors from the Freebox API
+    for tries in range(RETRIES):
+        try:
+            return _fetch(url)
+        except Exception as e:
+            if tries == RETRIES-1:
+                raise e
+            time.sleep(0.5)
 
 def fetch_channels():
     return fetch(CHANNEL_TABLE_URL)
