@@ -11,7 +11,7 @@ echo "recording ${FREEBOXREC_OUTFILE}.mpg"
 ffmpeg \
     -loglevel level+fatal \
     -i "${FREEBOXREC_STREAM}" \
-    -map 0 -c copy \
+    -map 0:u -c copy \
     -t ${FREEBOXREC_DURATION} \
     -f mpegts "${FREEBOXREC_OUTFILE}.mpg"
 
