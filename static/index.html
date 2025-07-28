@@ -9,25 +9,34 @@
     <script src="/static/vue.global.js"></script>
     <title>freeboxrec</title>
     <base href="/">
+    <style>
+      .bg-main {
+        background-color: #b5b9bd;
+      }
+      .bg-container {
+        background-color: #d6d9db;
+      }
+      .border-container {
+        border-color: #dee2e6 !important;
+      }
+    </style>
   </head>
 
-  <body class="text-bg-secondary" style="--bs-bg-opacity: .5;">
+  <body class="bg-main">
 
-    <div id="app">
-      <div class="container border border-5">
-	<div class="row">
+    <div id="app" class="p-1">
+      <div class="container border border-5 rounded p-2 mb-3 border-container">
+	<div class="row border-1">
 	  <div class="col">
-	    <div class="row flex-fill">
-	      <h4> Chaîne à enregistrer:</h4>
-	      <div class="d-flex justify-content-center border border-1 text-bg-light">
-                {{channel_name}}
-              </div>
-	    </div> <!-- row -->
+	    <h4 class="mb-1">Chaîne à enregistrer:</h4>
+	    <div class="text-center p-1 mb-1 bg-container rounded">
+              {{channel_name}}
+            </div>
 
 	    <div class="d-flex flex-row">
 
-	      <div class="col-11 flex-shrink-10 text-bg-light">
-		<div style="overflow-y: scroll; max-height: 200px">
+	      <div class="col-10 flex-shrink-10">
+		<div class="m-1 p-1 border rounded bg-container" style="overflow-y: scroll; max-height: 200px">
 		  <div v-for="idx in range(channels.length)" class="form-check">
 		    <input type="radio" :value="idx" v-model="prog.chan_idx"
 			   class="form-check-input"/>
@@ -37,12 +46,12 @@
 		</div>
 	      </div> <!-- col -->
 
-	      <div class="col-1 d-flex flex-column-1 flex-shrink-1">
+	      <div class="col d-flex flex-column-1 flex-shrink-1 p-1">
 		<div class="btn-group-vertical flex-fill" role="group">
 		  <input type="button" value="/\" v-on:click="chan_update(-1)"
-			 class="btn btn-secondary border border-1" >
+			 class="btn btn-secondary border" >
 		  <input type="button" value="\/" v-on:click="chan_update(+1)"
-			 class="btn btn-secondary border border-1" >
+			 class="btn btn-secondary border" >
 		</div>
 	      </div> <!-- col -->
 
@@ -50,23 +59,25 @@
 	  </div> <!-- col -->
 
 	  <div class="col">
-	    <div class="row border border-1">
-	      <label for="dateSelector" class="col-4">Date: </label>
-	      <input id="dateSelector" type="date" v-model="prog.date"
-                     class="col form-control">
+	    <div class="row mb-3 align-items-center">
+              <div class="col-form-label input-group">
+                <label for="dateSelector" class="input-group-text">Date:</label>
+	        <input id="dateSelector" type="date" v-model="prog.date"
+                       class="form-control">
+              </div>
 	    </div>
 
-	    <div>
-	      <label for="hourSelector">Heure de début: </label>
-	      <select name="hour" id="hourSelector" v-model="prog.hour">
-		<option v-for="h in range(24)" :value="h">{{h}} </option>
+	    <div class="mb-3 d-flex align-items-center col input-group">
+              <label for="hourSelector" class="input-group-text">Heure de début: </label>
+	      <select name="hour" id="hourSelector" v-model="prog.hour" class="form-select">
+	        <option v-for="h in range(24)" :value="h">{{h}} </option>
 	      </select>
-	      <select name="min" id="minSelector" v-model="prog.min">
+	      <select name="min" id="minSelector" v-model="prog.min" class="form-select">
 		<option v-for="h in range(60)" :value="h">{{h}} </option>
 	      </select>
 	    </div>
 
-	    <div class="btn-group btn-group-sm d-sm-flex border border-1" role="group">
+	    <div class="btn-group btn-group-sm d-sm-flex mb-3" role="group">
 	      <input type="button" value="<< 24h" v-on:click="date_add(-1)"
 		     class="btn btn-secondary border flex-fill" >
 	      <input type="button" value="<< 3h" v-on:click="time_add(-3)"
@@ -83,19 +94,23 @@
 		     class="btn btn-secondary border flex-fill" >
 	    </div>
 
-            <div class="row">
-	      <div class="col input-group">
-	        <label for="durationSelector" class="col">Durée (min.) :</label>
-	        <input id="durationSelector" type="number" v-model="prog.duration" min="0"
-                       class="col form-control"/>
+            <div class="row mb-3 align-items-center">
+	      <div class="col-7">
+                <div class="input-group">
+	          <span class="input-group-text">Durée (min.) :</span>
+	          <input id="durationSelector" type="number" v-model="prog.duration" min="0" class="form-control"/>
+                </div>
 	      </div>
 
-	      <div class="col">
-                Fin: <span class="border border-1">{{prog_end_time}}</span>
+	      <div class="col-5">
+                  <div class="input-group">
+                      <span class="input-group-text">Fin:</span>
+                      <span class="input-group-text"><em>{{prog_end_time}}</em></span>
+                  </div>
               </div>
             </div> <!-- row -->
 
-	    <div class="input-group mb-3">
+	    <div class="input-group">
 	      <div class="form-floating">
 		<input id="titleSelector" type="text" v-model="prog.title"
 		       class="form-control"/>
@@ -103,17 +118,16 @@
 	      </div>
 	    </div>
 
-	    <p/>
-
 	  </div> <!-- col -->
 	</div> <!-- row -->
 
-	<div class="row text-center">
+	<div class="row text-center border-1 px-3">
 	  <div>
-	    <h3>Liste des programmes:</h3>
+	    <h3 class="pt-3">Liste des programmes:</h3>
 	  </div>
-	  <div style="overflow-x: auto; overflow-y: scroll; max-height: 200px">
-	    <table class="table border border-1 text-bg-light">
+	  <div class="border rounded bg-container"
+               style="overflow-x: auto; overflow-y: scroll; max-height: 200px">
+            <table class="table">
 	      <thead>
 		<tr>
 		  <th>Heure</th>
@@ -122,7 +136,7 @@
 		</tr>
 	      </thead>
 	      <tbody>
-		<tr v-for="e in epg">
+		<tr v-for="e in epg" class="border-top border-bottom">
 		  <td>{{ time_start_end(e.date, e.duration) }}</td>
 		  <td><em>{{ e.title }}</em></td>
 		  <td>
@@ -138,25 +152,21 @@
 	</div> <!-- row -->
 
 	<div class="row text-center">
-	  <div>
+	  <div class="my-3">
 	    <input id="createRecording" type="button" value="Programmer l'enregistrement"
 		   v-on:click="postRecording()"
 		   class="btn btn-success">
 	  </div>
-	  <p/>
 	</div> <!-- row -->
       </div> <!-- container -->
 
-      <div class="container">
-	<p>
-      </div>
 
-      <div class="container border border-5">
-	<div class="row text-center">
-	  <h3>Enregistrements programmés</h3>
+      <div class="container border border-5 rounded border-container">
+	<div class="row text-center border-1 p-2 px-3">
+	  <h3 class="p-0 mb-3">Enregistrements programmés</h3>
 
-	  <div style="overflow-x: auto">
-	    <table class="table text-bg-light">
+	  <div style="overflow-x: auto" class="border bg-container rounded p-0">
+	    <table class="table">
 	      <thead>
 		<tr>
 		  <th>Chaîne</th>
@@ -168,7 +178,7 @@
 		</tr>
 	      </thead>
 	      <tbody>
-		<tr v-for="rec in recordings">
+		<tr v-for="rec in recordings" class="border-top border-bottom">
 		  <td>{{rec.channel}}</td>
 		  <td>{{rec.date}}</td>
 		  <td>{{ time_start_end(rec.tstamp, rec.duration_min*60) }}</td>
